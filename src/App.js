@@ -1,15 +1,22 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native';
-import { TimerProvider } from './TimerContext';
-import Timer from './Timer';
+import { NavigationContainer } from '@react-navigation/native';
+import { TimerProvider } from './components/Context/TimerContext';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Timer from './components/Timer';
+import Alerm from './components/Alerm';
+
+const Tab = createBottomTabNavigator();
 
 const App = () => {
   return (
-    <SafeAreaView>
+    <NavigationContainer>
       <TimerProvider>
-        <Timer />
+        <Tab.Navigator>
+          <Tab.Screen name="Countdown" component={Timer}/>
+          <Tab.Screen name="Alerm" component={Alerm}/>
+        </Tab.Navigator>
       </TimerProvider>
-    </SafeAreaView>
+    </NavigationContainer>
   );
 };
 
