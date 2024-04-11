@@ -27,26 +27,22 @@ export const TimerProvider = ({ children }) => {
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [isReset, setIsReset] = useState(false);
   const [isSelectingTime, setIsSelectingTime] = useState(true);
+  const [vibrationCount, setVibrationCount] = useState(10); // デフォルトのバイブレーション回数
   const notificationSent = useRef(false);
   const intervalID = useRef(null);
  
-  const vibrate = useCallback(() => {
-    intervalID.current = setInterval(() => {
-      Vibration.vibrate(); // バイブレーションを開始
-    }, 1000);
-  }, []);
-
+  
   useEffect(() => {
-    let interval;
     if (isTimeUp && !notificationSent.current) {
       sendNotification();
       notificationSent.current = true; // 通知を送信したことを記録する
-      vibrate(); // バイブレーションを開始
+      startVibration(); // バイブレーションを開始
     } else {
       clearInterval(intervalID.current); // タイムアップでない場合はバイブレーションを停止
     }
-    return () => clearInterval(interval);
-  }, [isTimeUp, vibrate]);
+    return () => clearInterval(intervalID.current);
+  }, [isTimeUp, startVibration,notificationSent]);
+  
 
   useEffect(() => {
     const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
@@ -54,13 +50,40 @@ export const TimerProvider = ({ children }) => {
       resetTime(); // reset関数を呼び出す
     });
 
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+      }),
+    });
+
     return () => subscription.remove();
   }, []);
+  
+  useEffect(() => {
+    setTimeLimit({
+      hour: zeroPaddingNum(selectItems.hour),
+      min: zeroPaddingNum(selectItems.min),
+      sec: zeroPaddingNum(selectItems.sec)
+    });
+  }, [selectItems, setTimeLimit, zeroPaddingNum]);
 
   const zeroPaddingNum = useCallback((num) => {
     return String(num).padStart(2, "0");
   }, []);
 
+
+  const startVibration = useCallback(() => {
+    let count = 0;
+    intervalID.current = setInterval(() => {
+      Vibration.vibrate();
+      count++;
+      if (count === vibrationCount) {
+        clearInterval(intervalID.current); // 指定回数バイブレーションを繰り返したら停止
+      }
+    }, 1000);
+  }, [vibrationCount]);
 
   const startTime = useCallback(() => {
     intervalID.current = setInterval(() => tick(), 1000);
@@ -122,14 +145,6 @@ export const TimerProvider = ({ children }) => {
     notificationSent.current = false;
   }, [zeroPaddingNum, selectItems]);
 
-  useEffect(() => {
-    setTimeLimit({
-      hour: zeroPaddingNum(selectItems.hour),
-      min: zeroPaddingNum(selectItems.min),
-      sec: zeroPaddingNum(selectItems.sec)
-    });
-  }, [selectItems, setTimeLimit, zeroPaddingNum]);
-
   const sendNotification = async () => {
     await Notifications.scheduleNotificationAsync({
       content: {
@@ -161,6 +176,8 @@ export const TimerProvider = ({ children }) => {
         resetTime,
         zeroPaddingNum,
         isSelectingTime,
+        vibrationCount,
+        setVibrationCount
       }}
     >
       {children}
