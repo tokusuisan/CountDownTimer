@@ -29,6 +29,7 @@ export const TimerProvider = ({ children }) => {
   const [isSelectingTime, setIsSelectingTime] = useState(true);
   const [vibrationCount, setVibrationCount] = useState(10); // デフォルトのバイブレーション回数
   const notificationSent = useRef(false);
+  const vibrationIntervalRef = useRef(null);
   const intervalID = useRef(null);
  
   
@@ -38,10 +39,10 @@ export const TimerProvider = ({ children }) => {
       notificationSent.current = true; // 通知を送信したことを記録する
       startVibration(); // バイブレーションを開始
     } else {
-      clearInterval(intervalID.current); // タイムアップでない場合はバイブレーションを停止
+      clearInterval(vibrationIntervalRef.current); // タイムアップでない場合はバイブレーションを停止
     }
-    return () => clearInterval(intervalID.current);
-  }, [isTimeUp, startVibration,notificationSent]);
+    return () => clearInterval(vibrationIntervalRef.current);
+  }, [isTimeUp, startVibration, notificationSent]);
   
 
   useEffect(() => {
@@ -76,11 +77,11 @@ export const TimerProvider = ({ children }) => {
 
   const startVibration = useCallback(() => {
     let count = 0;
-    intervalID.current = setInterval(() => {
+    vibrationIntervalRef.current = setInterval(() => {
       Vibration.vibrate();
       count++;
       if (count === vibrationCount) {
-        clearInterval(intervalID.current); // 指定回数バイブレーションを繰り返したら停止
+        clearInterval(vibrationIntervalRef.current); // 指定回数バイブレーションを繰り返したら停止
       }
     }, 1000);
   }, [vibrationCount]);

@@ -5,6 +5,7 @@ import { useTimer } from '../Context/TimerContext';
 import { Picker } from '@react-native-picker/picker';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { StatusBar } from "expo-status-bar";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import SelectDropdown from 'react-native-select-dropdown'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { selectTimeStyles, timeRemainingStyles } from './style';
@@ -12,8 +13,8 @@ import { selectTimeStyles, timeRemainingStyles } from './style';
 const Timer = () => {
   const { selectItems, setSelectItems, isStart, isTimeUp, TIMES, startTime, zeroPaddingNum, timeLimit, stopTime, resetTime, isSelectingTime, vibrationCount, setVibrationCount } = useTimer();
   const [savedTimes, setSavedTimes] = useState([]);
+  const [disableButton, setDisableButton] = useState(false);
   const vibrationOptions = [10, 20, 30, 40, 50];
-
 
      useEffect(() => {
        // アプリ起動時に保存された時間を読み込む
@@ -30,6 +31,20 @@ const Timer = () => {
    
        getSavedTimes();
      }, []);
+
+     useEffect(() => {
+      //00:00:00ではボタンを無効化する
+      if (
+        zeroPaddingNum(timeLimit.hour) === '00' &&
+        zeroPaddingNum(timeLimit.min) === '00' &&
+        zeroPaddingNum(timeLimit.sec) === '00'
+        ) 
+      {
+        setDisableButton(true);
+      } else {
+        setDisableButton(false);
+      }
+      }, [timeLimit]);
    
      const saveSavedTimes = async (newSavedTimes) => {
        try {
@@ -73,8 +88,8 @@ const Timer = () => {
   const SelectTime = () => {
   return (
     <View style={selectTimeStyles.container}>
-       <StatusBar barStyle="dark-content" />
-    <View style={{alignItems: 'center' }}>
+       <StatusBar  style="light" />
+      <View style={{alignItems: 'center' }}>
       <View style={selectTimeStyles.rowContainer}>
         <View style={selectTimeStyles.pickerContainer}>
           <Picker
@@ -83,9 +98,10 @@ const Timer = () => {
               setSelectItems((prevItems) => ({ ...prevItems, hour: itemValue }))
             }
             style={{ width: 100 }}
+            itemStyle={{color:'#CCCCCC'}}
           >
             {TIMES.hour.map((hour) => (
-              <Picker.Item key={hour} label={zeroPaddingNum(hour)} value={hour} />
+              <Picker.Item key={hour} label={zeroPaddingNum(hour)} value={hour}/>
             ))}
           </Picker>
           <Text  style={selectTimeStyles.pickerText}>Hour</Text>
@@ -98,6 +114,7 @@ const Timer = () => {
               setSelectItems((prevItems) => ({ ...prevItems, min: itemValue }))
             }
             style={{ width: 100 }}
+            itemStyle={{color:'#CCCCCC'}}
           >
             {TIMES.min.map((min) => (
               <Picker.Item key={min} label={zeroPaddingNum(min)} value={min} />
@@ -113,6 +130,7 @@ const Timer = () => {
               setSelectItems((prevItems) => ({ ...prevItems, sec: itemValue }))
             }
             style={{ width: 100 }}
+            itemStyle={{color:'#CCCCCC'}}
           >
             {TIMES.sec.map((sec) => (
               <Picker.Item key={sec} label={zeroPaddingNum(sec)} value={sec} />
@@ -121,10 +139,8 @@ const Timer = () => {
           <Text style={selectTimeStyles.pickerText}>Sec</Text>
         </View>
       </View>
-      <View>
-      </View>
       <View style={selectTimeStyles.rowContainer}>
-      <Text style={{ fontSize: 16, fontFamily: 'Roboto-Bold' }}>Vibration Count:</Text>
+      <Text style={{ fontSize: 16, fontFamily: 'Roboto-Bold', color:'#F5F5F5' }}>Vibration Count: </Text>
       <SelectDropdown
         defaultValue={vibrationCount}
         data={vibrationOptions.map((value) => value.toString())} // 文字列の配列を生成
@@ -147,12 +163,25 @@ const Timer = () => {
       dropdownStyle={selectTimeStyles.dropdownMenuStyle}
        />
        </View>
-       </View>
+      </View>
       <View style={selectTimeStyles.buttonContainer}>
-       <PaperButton mode="contained"  onPress={startTime} disabled={isStart || isTimeUp} labelStyle={{ textAlign: 'center', lineHeight: 30 }}>
+       <PaperButton 
+       mode="outlined"  
+       onPress={startTime} 
+       disabled={disableButton || isStart || isTimeUp}
+       labelStyle={{ textAlign: 'center', lineHeight: 30, color: disableButton || isStart || isTimeUp ? '#9E9E9E' : '#00B06B'}}
+       >
          Start
        </PaperButton>
-       <PaperButton mode="contained" onPress={handleShortcut} labelStyle={{ textAlign: 'center', lineHeight: 30 }}>
+       <PaperButton
+        icon={({ color, size }) => (
+          <MaterialCommunityIcons name="alarm-plus" size={size} color={color} />
+        )} 
+       mode="outlined" 
+       onPress={handleShortcut} 
+       disabled={disableButton || isStart || isTimeUp}
+       labelStyle={{ textAlign: 'center', lineHeight: 30, color: disableButton || isStart || isTimeUp ? '#9E9E9E' : '#FFFFFF'}}
+       >
           Add Shortcut
         </PaperButton>
       </View>
@@ -162,10 +191,9 @@ const Timer = () => {
           <TouchableHighlight
             onPress={() => handleStartSavedTime(item)}
             style={selectTimeStyles.swipeItem}
-            underlayColor="#DDDDDD"
           >
             <View>
-              <Text>{item.time}</Text>
+              <Text  style={{ fontSize: 16, fontFamily: 'Roboto-Bold', color:'#F5F5F5' }}>{item.time}</Text>
             </View>
           </TouchableHighlight>
         )}
@@ -189,24 +217,48 @@ const Timer = () => {
  const TimeRemainingScreen = () => {
   return (
     <View style={timeRemainingStyles.container}>
-      <View style={{ alignItems: 'center', marginBottom: 20 }}>
-      <Text style={timeRemainingStyles.timeText}>
-       {timeLimit.hour}:{timeLimit.min}:{timeLimit.sec}
-      </Text>
-        <Text style={{ fontSize: 20, marginTop: 10 }}>
+      <View style={{ alignItems: 'center', marginBottom: 5 }}>
+        <Text style={timeRemainingStyles.timeText}>
+        {timeLimit.hour}:{timeLimit.min}:{timeLimit.sec}
+        </Text>
+      </View>
+      <View style={{ alignItems: 'center', flexDirection:'row', justifyContent: "space-around", marginBottom: 20}}>
+        <MaterialCommunityIcons name="bell" size={20} color='#9E9E9E' style={{marginRight:3, marginTop:3}} />
+        <Text style={{ fontSize: 20, marginTop: 5, color:'#9E9E9E' }}>
           {calculateEstimatedEndTime()}
         </Text>
       </View>
       <View style={timeRemainingStyles.buttonContainer}>
         <View style={{ marginRight: '10%' }}>
           {isStart ? (
-            <PaperButton mode="contained" onPress={stopTime} disabled={!isStart || isTimeUp}>Stop</PaperButton>
+            <PaperButton
+            mode="outlined"
+            onPress={stopTime} 
+            disabled={!isStart || isTimeUp } 
+            labelStyle={{color:'#F6AA00'}}
+            >
+            Pause
+            </PaperButton>
           ) : (
-            <PaperButton mode="contained" onPress={startTime} disabled={isStart || isTimeUp}>Start</PaperButton>
+            <PaperButton 
+            mode="outlined" 
+            onPress={startTime} 
+            disabled={isStart || isTimeUp }  
+            labelStyle={{color:'#00B06B'}}
+            >
+            Resume
+            </PaperButton>
           )}
         </View>
         <View>
-          <PaperButton mode="contained" onPress={resetTime} disabled={isStart} >Reset</PaperButton>
+          <PaperButton 
+          mode="outlined" 
+          onPress={resetTime} 
+          disabled={isStart} 
+          labelStyle={{color:'#9E9E9E'}}
+          >
+          Reset
+          </PaperButton>
         </View>
       </View>
       <View>

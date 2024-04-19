@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { Alert } from 'react-native';
 import { useFonts } from 'expo-font';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Provider as PaperProvider  } from 'react-native-paper';
-import { TimerProvider } from './components/Context/TimerContext';
 import * as Notifications from 'expo-notifications';
-import Timer from './components/Countdown/Timer';
-import Alerm from './components/Alerm';
+import TimerScreen from './components/Screen/TimerScreen';
+import AlarmScreen from './components/Screen/AlarmScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -42,12 +42,27 @@ const App = () => {
   return (
     <NavigationContainer>
       <PaperProvider>
-      <TimerProvider>
-        <Tab.Navigator>
-          <Tab.Screen name="Countdown" component={Timer}/>
-          <Tab.Screen name="Alerm" component={Alerm}/>
+        <Tab.Navigator screenOptions={{
+          headerStyle: {
+            backgroundColor: "#111111",
+           },
+           headerTitleStyle: {
+            color:'#F5F5F5'
+          },
+          tabBarStyle: {
+            backgroundColor: "#111111",
+          },
+          tabBarLabelStyle: {
+             color: '#F5F5F5' 
+          },
+          headerTitleAlign: 'left',
+          headerShadowVisible: false,
+          tabBarInactiveTintColor: "#ffffff88",
+          tabBarActiveTintColor: "#fff",
+        }}>
+          <Tab.Screen name="Countdown" component={TimerScreen} options={{ tabBarIcon: ({color, size}) => (<MaterialCommunityIcons name="timer-outline" color={color} size={size}/>)}}/>
+          <Tab.Screen name="Alarm" component={AlarmScreen} options={{ tabBarIcon: ({color, size}) => (<MaterialCommunityIcons name="clock-outline" color={color} size={size}/>)}}/>
         </Tab.Navigator>
-      </TimerProvider>
       </PaperProvider>
     </NavigationContainer>
   );
