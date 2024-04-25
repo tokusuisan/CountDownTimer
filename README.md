@@ -15,7 +15,9 @@ It is a simple one that has a Timer function that allows the user to specify up 
 </table>
 
 ## Project Specifications:
--It uses AsyncStorage, and by pressing the Add Shortcut button on the UI, you can create a shortcut and display it in SwipeListView.
+-　It uses AsyncStorage, and by pressing the Add Shortcut button on the UI, you can create a shortcut and display it in SwipeListView.
+Just press that shortcut to set and start the timer.
+- When the specified time is reached or the countdown ends, it will vibrate for the number of vibrations set by the user.
 
 
 
