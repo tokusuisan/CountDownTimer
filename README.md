@@ -8,8 +8,11 @@ It is a simple one that has a Timer function that allows the user to specify up 
 <tr>
 <td><img src="https://github.com/tokusuisan/CountDownTimer/assets/137431424/801a3260-8c90-4f34-aef5-a0b46490fbae"></td>
 <td><img src="https://github.com/tokusuisan/CountDownTimer/assets/137431424/619e1d49-8bd0-4311-a089-cc8848b01881"></td>
-<td><img src="画像URL"></td>
-<td><img src="画像URL"></td>
+<td><img src="https://github.com/tokusuisan/CountDownTimer/assets/137431424/5143400b-7925-4229-88d4-7e99c4da4300"></td>
+<td><img src="https://github.com/tokusuisan/CountDownTimer/assets/137431424/a2d2e9be-6b11-41b8-87b5-3e8f47e7522b"></td>
+<td><img src="https://github.com/tokusuisan/CountDownTimer/assets/137431424/bd91d8c8-d02e-4908-af71-951e6698ef81"></td>
 </tr>
 </table>
+
+
 
