@@ -21,5 +21,7 @@ Just press that shortcut to set and start the timer.
 - If you touch the notification, you can end it even with the specified vibration and move to the selection screen.
 
 ## Local Install
-
+git clone https://github.com/tokusuisan/CountDownTimer.git
+cd CountDownTimer
+npm install
 
