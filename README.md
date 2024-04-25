@@ -14,6 +14,9 @@ It is a simple one that has a Timer function that allows the user to specify up 
 </tr>
 </table>
 
+## Project Specifications:
+-It uses AsyncStorage, and by pressing the Add Shortcut button on the UI, you can create a shortcut and display it in SwipeListView.
+
 
 
 
