@@ -2,7 +2,7 @@
 >This countdown timer is made using Expo, react native.
 It is a simple one that has a Timer function that allows the user to specify up to seconds, and an Alarm function that allows the user to specify up to minutes.
 
-# Screenshots
+## Screenshots
 
 <table>
 <tr>
@@ -13,6 +13,7 @@ It is a simple one that has a Timer function that allows the user to specify up 
 <td><img src="https://github.com/tokusuisan/CountDownTimer/assets/137431424/bd91d8c8-d02e-4908-af71-951e6698ef81"></td>
 </tr>
 </table>
+
 
 
 
