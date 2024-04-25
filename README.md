@@ -20,5 +20,6 @@ Just press that shortcut to set and start the timer.
 - When the specified time is reached or the countdown ends, it will activate a notification and vibrate for the number of vibrations set by the user.
 - If you touch the notification, you can end it even with the specified vibration and move to the selection screen.
 
+## Local Install
 
 
