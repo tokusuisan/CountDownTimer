@@ -32,7 +32,7 @@ npx expo start
 ```
 # Built With:
 - React native
-- Jvascript
+- Javascript
 - Expo
 - AsyncStorage
 - react-native-swipe-list-view
